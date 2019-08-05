@@ -12,7 +12,7 @@ import (
 )
 
 type User struct {
-    Name, Email string
+	Name, Email string
 }
 
 type Db struct {
@@ -46,9 +46,9 @@ func parseUserFromJson(r *http.Request) (User, error) {
 func parseId(r *http.Request) (int, error) {
 	id, ok := r.URL.Query()["id"]
 
-    if !ok || len(id) < 1 {
-        return 0, errors.New("parameter 'id' is missing")
-    }
+	if !ok || len(id) < 1 {
+		return 0, errors.New("parameter 'id' is missing")
+	}
 
 	i, _ := strconv.Atoi(id[0])
 	if i < 1 || i > userCount {
@@ -88,7 +88,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		mx.Lock()
 		userCount++
-		time.Sleep(1*time.Millisecond)
+		time.Sleep(1 * time.Millisecond)
 		Users.v[userCount] = u
 		fmt.Fprintln(w, "user created!")
 		printUser(w, userCount, u)
@@ -131,6 +131,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	Users = initDb()
-    http.HandleFunc("/", handler)
-    log.Fatal(http.ListenAndServe(":8080", nil))
+	http.HandleFunc("/", handler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

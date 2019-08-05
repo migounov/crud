@@ -25,7 +25,7 @@ func sendPost(bytesRepresentation []byte) {
 }
 
 func TestPost(t *testing.T) {
-	for i := 1; i < 10;  i++ {
+	for i := 1; i < 10; i++ {
 		id := strconv.Itoa(i)
 		jsonBody := map[string]string{
 			"Name":  "User" + id,
