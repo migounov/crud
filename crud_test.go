@@ -8,10 +8,11 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"sync"
 	"testing"
 )
 
-func sendPost(bytesRepresentation []byte) {
+func sendPost(wg *sync.WaitGroup, bytesRepresentation []byte) {
 	resp, err := http.Post("http://localhost:8080", "application/json", bytes.NewBuffer(bytesRepresentation))
 
 	if err != nil {
@@ -22,10 +23,13 @@ func sendPost(bytesRepresentation []byte) {
 		log.Fatalln(err)
 	}
 	fmt.Printf("%s", b)
+	wg.Done()
 }
 
 func TestPost(t *testing.T) {
-	for i := 1; i < 10; i++ {
+	var wg sync.WaitGroup
+	wg.Add(10)
+	for i := 1; i <= 10; i++ {
 		id := strconv.Itoa(i)
 		jsonBody := map[string]string{
 			"Name":  "User" + id,
@@ -37,6 +41,7 @@ func TestPost(t *testing.T) {
 			log.Fatalln(err)
 		}
 
-		go sendPost(bytesRepresentation)
+		go sendPost(&wg, bytesRepresentation)
 	}
+	wg.Wait()
 }
